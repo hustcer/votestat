@@ -1,7 +1,7 @@
 /*
  * Author: MJ                                                      
- * Date  : 2013                                                      
- * Desc  : A vote statistic tool
+ * Date  : 2013/07/20
+ * Desc  : A vote statistic tool for ps
 */
 jQuery(function($){
     
@@ -122,7 +122,7 @@ jQuery(function($){
             var sto  = window.localStorage,
                 prev = sto.getItem(votesItem),
                 hist = sto.getItem(histItem);
-                
+
             if(prev == null|| hist == null){
                 mo.showMsg(msgs.noRevertData);
                 return;
