@@ -1,4 +1,4 @@
-This Is A Votes Stastic Tool
+This Is a Votes Statistic Tool
 
 #   需求描述
 
