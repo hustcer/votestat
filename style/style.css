@@ -1,0 +1,34 @@
+@charset "utf8";
+
+.valid{color:#009722!important;}
+.hide{display: none;}
+h3{text-align: center;font-size: 18px;color: #3D66CE;clear: both;}
+h5{font-weight: normal;font-size: 13px;color: #333;}
+h4{color: #666}
+.msgbox{padding: 10px;line-height: 18px;font-size: 12px;background-color: #FFFDE5;color:#1A7FCE;}
+.content{width: 1000px;margin: 10px auto;border: 1px dashed gray;padding: 3px 0 20px;
+         border-width: 1px 0;}
+.table{width: 100%;}
+.table td{text-align: center;line-height: 32px;border: 1px solid rgb(144, 181, 236);border-width: 1px 1px 0 0;
+          cursor: pointer;}
+.table .firstcol{border-left: 1px solid rgb(144, 181, 236);}
+.table .lastrow{border-bottom: 1px solid rgb(144, 181, 236);}
+.table td span{color: #333;font-size: 14px;}
+.table td em{color: #999;font-size: 9px;font-style: normal;}
+.table .acounter,.table .bcounter{font-size: 20px;color: #C40000;}
+.table .selected{background-color: #659FE0;}
+.table .selected span{color: #C40000;}
+.table .selected em{color: #333;}
+.counter{margin: 10px 0 20px;}
+.counter table{width: 100%;}
+.counter th{text-align: right;padding-right: 5px;}
+.counter td{text-align: left;color: #009722;font-size: 32px;}
+.output{margin: 20px 0 10px;clear: both;font-size: 13px;}
+.oparea{margin: 0px 0 30px;float: right;}
+.oparea a{text-decoration: none;outline: none;color: #FFF;padding: 5px 12px;
+        margin: 0 15px; background-color: rgb(68, 138, 202);
+        font-size: 14px; font-weight: normal;}
+.oparea a:hover{color:#333;background-color: rgb(243, 151, 49);}
+.help ol li{line-height: 22px;color: steelblue;font-size: 14px;}
+.msgbox .warning-btn{background-color: #C40000;color: #FFF;padding: 3px 10px;text-decoration: none;outline: none;}
+
