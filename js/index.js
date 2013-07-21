@@ -41,7 +41,7 @@ jQuery(function($){
         },
         initHandler: function(){
             var addTdHandler = function($elem, cStr){
-                $('td', $elem).on({
+                $('td', $elem).not('td.empty').on({
                     'click': function(){
                         fid = lid;
                         lid = $(this).data('id');
