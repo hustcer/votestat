@@ -1,11 +1,11 @@
 /*
- * Author: MJ                                                      
+ * Author: MJ
  * Date  : 2013/07/20
  * Desc  : A vote statistic tool for ps
 */
 jQuery(function($){
-    
-    var validCouter = 19, validLimit = 100, totalRole = 211, histLimit = 9, base = 1;
+
+    var validCouter = 19, validLimit = 100, totalRole = 211, histLimit = 9;
     var sto         = window.localStorage;
     var votesItem   = '__preVotes',
         votesBkItem = '__preVotes_bk',
@@ -26,10 +26,11 @@ jQuery(function($){
         'success'      : '投票成功, 选票分别投给了：',
         'clearAll'     : '所有数据已被清空！',
         'clearCurr'    : '当前选票数据已被清空！',
+        'ratioError'   : '放大系数输入非法，请输入大于等于1的整数！',
         'revertLabel'  : '撤销前一次统计',
         'noData'       : '无数据'
     };
-    
+
     var mo = {
         init: function(){
             if(this.supportLocalStorage){
@@ -65,7 +66,8 @@ jQuery(function($){
             addTdHandler($('table.atable'), 'acounter');
             addTdHandler($('table.btable'), 'bcounter');
             $('a.help').on('click', function(){mo.showHelp();});
-            $('a.okay').on('click', function(){mo.submitVotes();});
+            $('a.okay').on('click', function(){mo.checkBeforeSubmit();});
+            // $('a.okay').on('click', function(){mo.submitVotes();});
             $('a.clear').on('click', function(){mo.clearCurrent();});
             $('a.revert').on('click', function(){mo.revertAlert();});
             $('a.export').on('click', function(){mo.exportData();});
@@ -180,9 +182,36 @@ jQuery(function($){
             }
             return data;
         },
+        checkBeforeSubmit: function(){
+            var ratio = +$('#zoom-ration').val();
+            if(ratio === 1){
+                mo.submitVotes();
+
+            } else if(ratio > 1){
+                $('#zoom-confirm em').text(ratio);
+                $('#pop-cancel').off('click');
+                $('#pop-confirm').off('click');
+                $('#pop-cancel').on('click', function(){$.modal.close();});
+                $('#pop-confirm').on('click', function(){
+                    $.modal.close();
+                    mo.submitVotes();
+                    return false;
+                });
+                $.modal($('#zoom-confirm'), {
+                    // 此配置项不可少否则表单数据加载会出现问题
+                    'persist'   : true,
+                    'maxWidth'  : 400,
+                    'minHeight' : 150
+                });
+            } else{
+                mo.showMsg(msgs.ratioError);
+            }
+            return false;
+        },
         submitVotes: function(){
             var valid = true,
                 msg   = [],
+                base  = +$('#zoom-ration').val();
                 prev  = sto.getItem(votesItem),
                 hist  = sto.getItem(histItem),
                 dt    = mo.buildVoteData(),
@@ -196,7 +225,7 @@ jQuery(function($){
                 valid = false;
                 mo.showMsg(msg.join(','));
             }
-            
+
             var vc   = valid ? 1*base : 0, ic = valid ? 0 : 1*base;
             var tt   = valid ? dt.length * base : 0;
             if(prev == null){
@@ -237,6 +266,8 @@ jQuery(function($){
             sto.setItem(votesItem, JSON.stringify(prev));
             mo.updateData(prev);
             mo.clearCurrent();
+            $('#zoom-ration').val('1');
+            return false;
         },
         updateData: function(dt){
             var hist  = sto.getItem(histItem);
@@ -271,7 +302,6 @@ jQuery(function($){
             out.push('其它0票.');
             $('div.outcontent').text(out.join(','));
 
-            
         },
         buildVoteData: function(){
             var data = [];
@@ -293,7 +323,6 @@ jQuery(function($){
               } catch(e) {}
         }())
     };
-    
+
     mo.init();
-    
 });
