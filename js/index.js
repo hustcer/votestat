@@ -1,10 +1,10 @@
 /*
- * Author: MJ                                                      
+ * Author: MJ
  * Date  : 2013/07/20
  * Desc  : A vote statistic tool for ps
 */
 jQuery(function($){
-    
+
     var validCouter = 20, validLimit = 100, totalRole = 211, histLimit = 9, base = 1;
     var sto         = window.localStorage;
     var votesItem   = '__preVotes',
@@ -29,7 +29,7 @@ jQuery(function($){
         'revertLabel'  : '撤销前一次统计',
         'noData'       : '无数据'
     };
-    
+
     var mo = {
         init: function(){
             if(this.supportLocalStorage){
@@ -196,7 +196,7 @@ jQuery(function($){
                 valid = false;
                 mo.showMsg(msg.join(','));
             }
-            
+
             var vc   = valid ? 1*base : 0, ic = valid ? 0 : 1*base;
             var tt   = valid ? dt.length * base : 0;
             if(prev == null){
@@ -271,7 +271,7 @@ jQuery(function($){
             out.push('其它0票.');
             $('div.outcontent').text(out.join(','));
 
-            
+
         },
         buildVoteData: function(){
             var data = [];
@@ -293,7 +293,7 @@ jQuery(function($){
               } catch(e) {}
         }())
     };
-    
+
     mo.init();
-    
+
 });
