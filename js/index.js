@@ -5,7 +5,8 @@
 */
 jQuery(function($){
     
-    var validCouter = 19, validLimit = 55, totalRole = 211, histLimit = 9, base = 1;
+    var validCouter = 19, validLimit = 100, totalRole = 211, histLimit = 9, base = 1;
+    var sto         = window.localStorage;
     var votesItem   = '__preVotes',
         votesBkItem = '__preVotes_bk',
         histItem    = '__votesHist';
@@ -16,8 +17,8 @@ jQuery(function($){
         'clearData'    : '警告：您确定要清空所有投票结果么？该操作将删除之前所有的统计数据，将其清零，之前所有的努力都付之一炬了，请三思啊！',
         'exportData'   : '请将以下数据导出结果复制出来，交给作者处理！',
         'exportOkay'   : '数据导出成功！请查看页面底部输出结果.',
-        'revertAlert'  : '您确信要撤销上一张选票的统计数据么？',
-        'revertOkay'   : '撤销上一张选票统计数据成功!',
+        'revertAlert'  : '您确信要撤销前一次的统计数据么？',
+        'revertOkay'   : '撤销前一次的统计数据成功!',
         'noRevertData' : '没有可以撤销的操作!',
         'aInvalid'     : 'A 区块选票数目不足' + validCouter + '票，该选票无效！',
         'bInvalid'     : 'B 区块选票数目不足' + validCouter + '票，该选票无效！',
@@ -25,7 +26,7 @@ jQuery(function($){
         'success'      : '投票成功, 选票分别投给了：',
         'clearAll'     : '所有数据已被清空！',
         'clearCurr'    : '当前选票数据已被清空！',
-        'revertLabel'  : '撤销前一张选票',
+        'revertLabel'  : '撤销前一次统计',
         'noData'       : '无数据'
     };
     
@@ -79,18 +80,17 @@ jQuery(function($){
             Mousetrap.bind(['shift' ], function() {
                 shiftdown = true;
             }, 'keypress');
+
             Mousetrap.bind(['shift' ], function() {
                 shiftdown = false;
             }, 'keyup');
         },
         loadData: function(){
-            var sto  = window.localStorage;
             var prev = sto.getItem(votesItem);
             prev     = JSON.parse(prev);
             mo.updateData(prev);
         },
         exportData: function(){
-            var sto  = window.localStorage;
             var prev = sto.getItem(votesItem);
             mo.showMsg(msgs.exportOkay);
             $('div.output h5').hide();
@@ -119,8 +119,7 @@ jQuery(function($){
         },
         revertOne: function(){
             $('a.revertConfirm').off('click');
-            var sto  = window.localStorage,
-                prev = sto.getItem(votesItem),
+            var prev = sto.getItem(votesItem),
                 hist = sto.getItem(histItem);
 
             if(prev == null|| hist == null){
@@ -163,7 +162,6 @@ jQuery(function($){
             $('a.clearallConfirm').on('click', function(){mo.clearAll();});
         },
         clearAll: function(){
-            var sto  = window.localStorage;
             sto.setItem(votesBkItem, sto.getItem(votesItem));
             sto.removeItem(votesItem);
             sto.removeItem(histItem);
@@ -185,7 +183,6 @@ jQuery(function($){
         submitVotes: function(){
             var valid = true,
                 msg   = [],
-                sto   = window.localStorage,
                 prev  = sto.getItem(votesItem),
                 hist  = sto.getItem(histItem),
                 dt    = mo.buildVoteData(),
@@ -203,7 +200,7 @@ jQuery(function($){
             var vc   = valid ? 1*base : 0, ic = valid ? 0 : 1*base;
             var tt   = valid ? dt.length * base : 0;
             if(prev == null){
-                prev = {'totalT':1*base,'validT':vc,'invalidT':ic,'totalV':tt,'data':mo.getInitData()};
+                prev = {'totalT':1*base,'validT':vc,'invalidT':ic,'totalV':tt,'base':base,'data':mo.getInitData()};
             }else{
                 prev = JSON.parse(prev);
                 prev.totalT   += 1*base;
@@ -232,7 +229,7 @@ jQuery(function($){
             if(valid){
                 hist.push({'totalT':1*base,'validT':vc,'invalidT':ic,'totalV':tt,'base':base,'data':dt});
             }else{
-                hist.push({'totalT':1*base,'validT':vc,'invalidT':ic,'totalV':tt,'data':[]});
+                hist.push({'totalT':1*base,'validT':vc,'invalidT':ic,'totalV':tt,'base':base,'data':[]});
             }
             $('a.revert').text(msgs.revertLabel + '(' + hist.length + ')');
 
@@ -242,7 +239,6 @@ jQuery(function($){
             mo.clearCurrent();
         },
         updateData: function(dt){
-            var sto   = window.localStorage;
             var hist  = sto.getItem(histItem);
             if(hist == null){
                 $('a.revert').text(msgs.revertLabel + '(0)');
