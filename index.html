@@ -26,6 +26,10 @@
             <span><a href="javascript:;" class="viewResult">查看结果</a></span>
             <span><a href="javascript:;" class="revert">撤销前一次统计</a></span>
             <span><a href="javascript:;" class="clear">清空当前选票</a></span>
+            <div class="zoom-div">
+                <span class="zoom-label">放大系数: </span>
+                <input type="number" id="zoom-ration" value="1" min="1" class="common-ipt ratio">
+            </div>
             <span><a href="javascript:;" class="okay">确定</a></span>
         </div>
         <h3>天翼杯浙江省首届群众最满意的平安社区评选选票(A)</h3>
@@ -149,7 +153,7 @@
                 <td class="lastrow empty"></td> <td class="lastrow empty"></td> <td class="lastrow acounter count empty">0</td>
             </tr>
         </table>
-        
+
         <h3>天翼杯浙江省首届群众最满意的平安村评选选票(B)</h3>
         <table class="btable table">
             <tr>
@@ -294,8 +298,21 @@
             </ol>
         </div>
     </div>
+
+    <div id="zoom-confirm" class="hide">
+        <h1>确认放大本次统计么?</h1>
+        <div class="ctnt">
+            您当前使用的放大系数为<em></em>, 这意味着您当前正对<em></em>张同样的选票进行批量统计, 请务必仔细核对清楚，您确定要这样做么?
+        </div>
+        <div class="pop-ops">
+            <span><a href="javascript:;" id="pop-confirm">确 定</a> </span>
+            <span><a href="javascript:;" id="pop-cancel">取 消</a> </span>
+        </div>
+    </div>
+
     <script type="text/javascript" src="./js/json2.js" charset="utf-8"></script>
     <script type="text/javascript" src="./js/jquery-1.10.2.min.js" charset="utf-8"></script>
+    <script type="text/javascript" src="./js/jquery.simplemodal.js" charset="utf-8"></script>
     <script type="text/javascript" src="./js/mousetrap.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="./js/index.js?t=1" charset="utf-8"></script>
 </body>
