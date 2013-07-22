@@ -175,7 +175,7 @@ jQuery(function($){
         },
         getInitData: function(){
             var data = [];
-            for (var i = 0; i < totalRole; i++) {
+            for (var i = 0; i <= totalRole; i++) {
                 data.push({'key':i, 'val':0});
             }
             return data;
