@@ -5,7 +5,7 @@
 */
 jQuery(function($){
 
-    var validCouter = 19, validLimit = 100, totalRole = 211, histLimit = 9;
+    var validCouter = 20, validLimit = 100, totalRole = 211, histLimit = 9;
     var sto         = window.localStorage;
     var votesItem   = '__preVotes',
         votesBkItem = '__preVotes_bk',
@@ -40,6 +40,12 @@ jQuery(function($){
             }
             mo.initHandler();
             mo.loadData();
+            if(window.location.hash !== '#zoom'){
+                $('div.zoom-div').hide();
+            }
+            if(window.location.hash !== '#merge'){
+                $('div.oparea a.merge').hide();
+            }
         },
         initHandler: function(){
             var addTdHandler = function($elem, cStr){
@@ -70,6 +76,7 @@ jQuery(function($){
             // $('a.okay').on('click', function(){mo.submitVotes();});
             $('a.clear').on('click', function(){mo.clearCurrent();});
             $('a.revert').on('click', function(){mo.revertAlert();});
+            $('a.merge').on('click', function(){mo.mergeData();});
             $('a.export').on('click', function(){mo.exportData();});
             $('a.clearall').on('click', function(){mo.clearAllAlert();});
             $('a.viewResult').on('click', function(){
@@ -91,6 +98,8 @@ jQuery(function($){
             var prev = sto.getItem(votesItem);
             prev     = JSON.parse(prev);
             mo.updateData(prev);
+        },
+        mergeData: function(){
         },
         exportData: function(){
             var prev = sto.getItem(votesItem);
@@ -200,8 +209,8 @@ jQuery(function($){
                 $.modal($('#zoom-confirm'), {
                     // 此配置项不可少否则表单数据加载会出现问题
                     'persist'   : true,
-                    'maxWidth'  : 400,
-                    'minHeight' : 150
+                    'maxWidth'  : 420,
+                    'minHeight' : 160
                 });
             } else{
                 mo.showMsg(msgs.ratioError);
