@@ -87,11 +87,10 @@ module.exports = function(grunt) {
             ]
           }
         },
-        // make a zipfile
         compress: {
           main: {
             options: {
-              archive: 'release/voteStatistic.zip'
+              archive: 'release/voteStatistic.zip'      // make a zipfile
             },
             files: [
               // {src: ['release/**'], dest: 'release/'},                           // includes files in path and its subdirs
