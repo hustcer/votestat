@@ -5,7 +5,7 @@
 */
 jQuery(function($){
 
-    var validCouter = 20, validLimit = 100, totalRole = 211, histLimit = 9;
+    var validCouter = 20, validLimit = 100, totalRole = 211, histLimit = 12;
     var sto         = window.localStorage;
     var votesItem   = '__preVotes',
         votesBkItem = '__preVotes_bk',
