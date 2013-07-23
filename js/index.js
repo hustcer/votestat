@@ -86,13 +86,13 @@ jQuery(function($){
             $('a.okay').on('click', function(){mo.checkBeforeSubmit();});
             // $('a.okay').on('click', function(){mo.submitVotes();});
             $('a.clear').on('click', function(){mo.clearCurrent();});
-            $('a.revert').on('click', function(){mo.revertAlert();});
             $('a.merge').on('click', function(){mo.showMerge();});
-            $('a.merge-confirm').on('click', function(){mo.mergeData();});
             $('a.import').on('click', function(){mo.showImport();});
-            $('a.import-confirm').on('click', function(){mo.importData();});
             $('a.export').on('click', function(){mo.exportData();});
+            $('a.revert').on('click', function(){mo.revertAlert();});
             $('a.clearall').on('click', function(){mo.clearAllAlert();});
+            $('a.merge-confirm').on('click', function(){mo.mergeData();});
+            $('a.import-confirm').on('click', function(){mo.importData();});
             $('a.viewResult').on('click', function(){
                 mo.loadData();
                 window.location.hash = '';
@@ -368,10 +368,10 @@ jQuery(function($){
             }
 
             if(dt == null){return;}
+            $('#counter td.t-votes').text(dt.totalV);
             $('#counter td.t-tickets').text(dt.totalT);
             $('#counter td.v-tickets').text(dt.validT);
             $('#counter td.i-tickets').text(dt.invalidT);
-            $('#counter td.t-votes').text(dt.totalV);
             var d = dt.data, $cell, nzArr = [];
             for (var i = 0, l = d.length; i < l; i++) {
                 $cell = $('table.table td[data-id="' + d[i].key + '"]');
