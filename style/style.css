@@ -6,7 +6,7 @@ h3{text-align: center;font-size: 18px;color: #3D66CE;clear: both;}
 h5{font-weight: normal;font-size: 13px;color: #333;}
 h4{color: #666}
 .msgbox{padding: 10px;line-height: 18px;font-size: 12px;background-color: #FFFDE5;color:#1A7FCE;word-wrap: break-word; word-break: break-all;}
-.content{width: 1000px;margin: 10px auto;border: 1px dashed gray;padding: 3px 0 20px;
+.content{width: 1020px;margin: 10px auto;border: 1px dashed gray;padding: 3px 0 20px;
          border-width: 1px 0;}
 .table{width: 100%;}
 .table td{text-align: center;line-height: 32px;border: 1px solid rgb(144, 181, 236);border-width: 1px 1px 0 0;
@@ -25,7 +25,7 @@ h4{color: #666}
 .counter td{text-align: left;color: #009722;font-size: 32px;}
 .output{margin: 20px 0 10px;clear: both;font-size: 13px;}
 .oparea{margin: 0px 0 30px;float: right;}
-.oparea a{text-decoration: none;outline: none;color: #FFF;padding: 5px 12px;
+.oparea a, .submit-data a{text-decoration: none;outline: none;color: #FFF;padding: 5px 12px;
         margin: 0 10px; background-color: rgb(68, 138, 202);
         font-size: 14px; font-weight: normal;}
 .oparea a:hover{color:#333;background-color: rgb(243, 151, 49);}
@@ -54,3 +54,8 @@ h4{color: #666}
     right:-18px;
     cursor:pointer;
 }
+.submit-data{clear: both; margin: 15px 0px 0 0; overflow: hidden; display: block;}
+.submit-data a{float: right;}
+
+.input-div textarea{font-size: 13px;width: 99%;}
+

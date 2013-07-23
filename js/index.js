@@ -12,23 +12,28 @@ jQuery(function($){
         histItem    = '__votesHist';
     var fid  = null, lid = null, shiftdown = false;
     var msgs = {
-        'support'      : '恭喜！您的浏览器可以正确支持该投票统计工具，可放心使用！',
-        'noSupport'    : '很遗憾！您的浏览器缺乏一些特性，无法完全支持该统计工具，推荐您使用最新版本的Chrome浏览器！',
-        'clearData'    : '警告：您确定要清空所有投票结果么？该操作将删除之前所有的统计数据，将其清零，之前所有的努力都付之一炬了，请三思啊！',
-        'exportData'   : '请将以下数据导出结果复制出来，交给作者处理！',
-        'exportOkay'   : '数据导出成功！请查看页面底部输出结果.',
-        'revertAlert'  : '您确信要撤销前一次的统计数据么？',
-        'revertOkay'   : '撤销前一次的统计数据成功!',
-        'noRevertData' : '没有可以撤销的操作!',
-        'aInvalid'     : 'A 区块选票数目不足' + validCouter + '票，该选票无效！',
-        'bInvalid'     : 'B 区块选票数目不足' + validCouter + '票，该选票无效！',
-        'invalid'      : '选票总数目超过' + validLimit + '票，该选票无效！',
-        'success'      : '投票成功, 选票分别投给了：',
-        'clearAll'     : '所有数据已被清空！',
-        'clearCurr'    : '当前选票数据已被清空！',
-        'ratioError'   : '放大系数输入非法，请输入大于等于1的整数！',
-        'revertLabel'  : '撤销前一次统计',
-        'noData'       : '无数据'
+        'support'        : '恭喜！您的浏览器可以正确支持该投票统计工具，可放心使用！',
+        'noSupport'      : '很遗憾！您的浏览器缺乏一些特性，无法完全支持该统计工具，推荐您使用最新版本的Chrome浏览器！',
+        'clearData'      : '警告：您确定要清空所有投票结果么？该操作将删除之前所有的统计数据，将其清零，之前所有的努力都付之一炬了，请三思啊！',
+        'exportData'     : '请将以下数据导出结果复制出来，交给作者处理！',
+        'exportOkay'     : '数据导出成功！请查看页面底部输出结果.',
+        'revertAlert'    : '您确信要撤销前一次的统计数据么？',
+        'revertOkay'     : '撤销前一次的统计数据成功!',
+        'noRevertData'   : '没有可以撤销的操作!',
+        'aInvalid'       : 'A 区块选票数目不足' + validCouter + '票，该选票无效！',
+        'bInvalid'       : 'B 区块选票数目不足' + validCouter + '票，该选票无效！',
+        'invalid'        : '选票总数目超过' + validLimit + '票，该选票无效！',
+        'success'        : '投票成功, 选票分别投给了：',
+        'clearAll'       : '所有数据已被清空！',
+        'clearCurr'      : '当前选票数据已被清空！',
+        'ratioError'     : '放大系数输入非法，请输入大于等于1的整数！',
+        'revertLabel'    : '撤销前一次统计',
+        'noDataToMerge'  : '没有可供合并的数据',
+        'noDataToImport' : '没有可供导入的数据',
+        'importSuccess'  : '数据导入成功!',
+        'mergeSuccess'   : '数据合并成功!',
+        'dataFormatErr'  : '数据格式错误!',
+        'noData'         : '无数据'
     };
 
     var mo = {
@@ -40,11 +45,17 @@ jQuery(function($){
             }
             mo.initHandler();
             mo.loadData();
+            // 显示放大系数功能
             if(window.location.hash !== '#zoom'){
                 $('div.zoom-div').hide();
             }
+            // 显示数据合并功能
             if(window.location.hash !== '#merge'){
                 $('div.oparea a.merge').hide();
+            }
+            // 显示数据导入功能
+            if(window.location.hash !== '#import'){
+                $('div.oparea a.import').hide();
             }
         },
         initHandler: function(){
@@ -76,7 +87,10 @@ jQuery(function($){
             // $('a.okay').on('click', function(){mo.submitVotes();});
             $('a.clear').on('click', function(){mo.clearCurrent();});
             $('a.revert').on('click', function(){mo.revertAlert();});
-            $('a.merge').on('click', function(){mo.mergeData();});
+            $('a.merge').on('click', function(){mo.showMerge();});
+            $('a.merge-confirm').on('click', function(){mo.mergeData();});
+            $('a.import').on('click', function(){mo.showImport();});
+            $('a.import-confirm').on('click', function(){mo.importData();});
             $('a.export').on('click', function(){mo.exportData();});
             $('a.clearall').on('click', function(){mo.clearAllAlert();});
             $('a.viewResult').on('click', function(){
@@ -99,7 +113,73 @@ jQuery(function($){
             prev     = JSON.parse(prev);
             mo.updateData(prev);
         },
+        showImport: function(){
+            $('h3, table','div.content').hide();
+            $('div.input-div').fadeIn();
+            $('a.import-confirm').show();
+        },
+        importData: function(){
+            var v = $.trim($('#data-area').val()), d;
+            if(!v){
+                mo.showMsg(msgs.noDataToImport);
+                return;
+            }
+
+            try{
+                d = JSON.parse(v);
+            }catch(e){
+                mo.showMsg(msgs.dataFormatErr);
+                return;
+            }
+            mo.showMsg(msgs.importSuccess);
+            sto.setItem(votesItem, JSON.stringify(d));
+            mo.updateData(d);
+        },
+        showMerge: function(){
+            $('h3, table','div.content').hide();
+            $('div.input-div').fadeIn();
+            $('a.merge-confirm').show();
+        },
         mergeData: function(){
+            var v = $.trim($('#data-area').val()), d;
+            if(!v){
+                mo.showMsg(msgs.noDataToMerge);
+                return;
+            }
+
+            try{
+                d = JSON.parse(v);
+            }catch(e){
+                mo.showMsg(msgs.dataFormatErr);
+                return;
+            }
+
+            var prev = sto.getItem(votesItem);
+            prev     = JSON.parse(prev);
+
+            if(prev == null){
+                mo.showMsg(msgs.mergeSuccess);
+                sto.setItem(votesItem, JSON.stringify(d));
+                mo.updateData(d);
+                return;
+            }
+
+            if(!!prev && !!d){
+                prev.totalT   += d.totalT;
+                prev.validT   += d.validT;
+                prev.invalidT += d.invalidT;
+                prev.totalV   += d.totalV;
+                for (var i = 0, l = d.data.length; i < l; i++) {
+                    for (var j = 0, m = prev.data.length; j < m; j++) {
+                        if(prev.data[j].key === d.data[i].key){
+                            prev.data[j].val += d.data[i].val;
+                            break;
+                        }
+                    }
+                }
+                sto.setItem(votesItem, JSON.stringify(prev));
+                mo.updateData(prev);
+            }
         },
         exportData: function(){
             var prev = sto.getItem(votesItem);
