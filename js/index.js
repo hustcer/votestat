@@ -140,14 +140,14 @@ jQuery(function($){
             prev    = JSON.parse(prev);
             hist    = JSON.parse(hist)||[];
             if(hist.length > 0){
-                ho             = hist.pop();
+                var ho         = hist.pop();
                 prev.totalT   -= ho.totalT;
                 prev.validT   -= ho.validT;
                 prev.invalidT -= ho.invalidT;
                 prev.totalV   -= ho.totalV;
                 for (var i = 0, l = ho.data.length; i < l; i++) {
                     for (var j = 0, m = prev.data.length; j < m; j++) {
-                        if(prev.data[j].key == ho.data[i].key){
+                        if(prev.data[j].key === ho.data[i].key){
                             if(ho.base){
                                 prev.data[j].val -= 1*ho.base;
                             }else{
@@ -220,7 +220,7 @@ jQuery(function($){
         submitVotes: function(){
             var valid = true,
                 msg   = [],
-                base  = +$('#zoom-ration').val();
+                base  = +$('#zoom-ration').val(),
                 prev  = sto.getItem(votesItem),
                 hist  = sto.getItem(histItem),
                 dt    = mo.buildVoteData(),
@@ -251,7 +251,7 @@ jQuery(function($){
                 for (var i = 0, l = dt.length; i < l; i++) {
                     keys.push(dt[i].key);
                     for (var j = 0, m = prev.data.length; j < m; j++) {
-                        if(prev.data[j].key == dt[i].key){
+                        if(prev.data[j].key === dt[i].key){
                             prev.data[j].val += 1*base;
                             break;
                         }
@@ -304,8 +304,8 @@ jQuery(function($){
                 return b.val - a.val;
             });
             var out = [];
-            for (var i = 0, l = sorted.length; i < l; i++) {
-                out.push(sorted[i].key + ':' + sorted[i].val + '票');
+            for (var m = 0, len = sorted.length; m < len; m++) {
+                out.push(sorted[m].key + ':' + sorted[m].val + '票');
             }
             $('div.output h5').show();
             out.push('其它0票.');
