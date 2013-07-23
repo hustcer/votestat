@@ -5,7 +5,7 @@
 */
 jQuery(function($){
 
-    var validCouter = 19, validLimit = 100, totalRole = 211, histLimit = 9;
+    var validCouter = 20, validLimit = 100, totalRole = 211, histLimit = 9;
     var sto         = window.localStorage;
     var votesItem   = '__preVotes',
         votesBkItem = '__preVotes_bk',
@@ -40,6 +40,12 @@ jQuery(function($){
             }
             mo.initHandler();
             mo.loadData();
+            if(window.location.hash !== '#zoom'){
+                $('div.zoom-div').hide();
+            }
+            if(window.location.hash !== '#merge'){
+                $('div.oparea a.merge').hide();
+            }
         },
         initHandler: function(){
             var addTdHandler = function($elem, cStr){
@@ -70,6 +76,7 @@ jQuery(function($){
             // $('a.okay').on('click', function(){mo.submitVotes();});
             $('a.clear').on('click', function(){mo.clearCurrent();});
             $('a.revert').on('click', function(){mo.revertAlert();});
+            $('a.merge').on('click', function(){mo.mergeData();});
             $('a.export').on('click', function(){mo.exportData();});
             $('a.clearall').on('click', function(){mo.clearAllAlert();});
             $('a.viewResult').on('click', function(){
@@ -91,6 +98,8 @@ jQuery(function($){
             var prev = sto.getItem(votesItem);
             prev     = JSON.parse(prev);
             mo.updateData(prev);
+        },
+        mergeData: function(){
         },
         exportData: function(){
             var prev = sto.getItem(votesItem);
@@ -131,14 +140,14 @@ jQuery(function($){
             prev    = JSON.parse(prev);
             hist    = JSON.parse(hist)||[];
             if(hist.length > 0){
-                ho             = hist.pop();
+                var ho         = hist.pop();
                 prev.totalT   -= ho.totalT;
                 prev.validT   -= ho.validT;
                 prev.invalidT -= ho.invalidT;
                 prev.totalV   -= ho.totalV;
                 for (var i = 0, l = ho.data.length; i < l; i++) {
                     for (var j = 0, m = prev.data.length; j < m; j++) {
-                        if(prev.data[j].key == ho.data[i].key){
+                        if(prev.data[j].key === ho.data[i].key){
                             if(ho.base){
                                 prev.data[j].val -= 1*ho.base;
                             }else{
@@ -200,8 +209,8 @@ jQuery(function($){
                 $.modal($('#zoom-confirm'), {
                     // 此配置项不可少否则表单数据加载会出现问题
                     'persist'   : true,
-                    'maxWidth'  : 400,
-                    'minHeight' : 150
+                    'maxWidth'  : 420,
+                    'minHeight' : 160
                 });
             } else{
                 mo.showMsg(msgs.ratioError);
@@ -211,7 +220,7 @@ jQuery(function($){
         submitVotes: function(){
             var valid = true,
                 msg   = [],
-                base  = +$('#zoom-ration').val();
+                base  = +$('#zoom-ration').val(),
                 prev  = sto.getItem(votesItem),
                 hist  = sto.getItem(histItem),
                 dt    = mo.buildVoteData(),
@@ -242,7 +251,7 @@ jQuery(function($){
                 for (var i = 0, l = dt.length; i < l; i++) {
                     keys.push(dt[i].key);
                     for (var j = 0, m = prev.data.length; j < m; j++) {
-                        if(prev.data[j].key == dt[i].key){
+                        if(prev.data[j].key === dt[i].key){
                             prev.data[j].val += 1*base;
                             break;
                         }
@@ -295,8 +304,8 @@ jQuery(function($){
                 return b.val - a.val;
             });
             var out = [];
-            for (var i = 0, l = sorted.length; i < l; i++) {
-                out.push(sorted[i].key + ':' + sorted[i].val + '票');
+            for (var m = 0, len = sorted.length; m < len; m++) {
+                out.push(sorted[m].key + ':' + sorted[m].val + '票');
             }
             $('div.output h5').show();
             out.push('其它0票.');
