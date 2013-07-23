@@ -17,9 +17,9 @@ This Is a Votes Statistic Tool
 * (O)可以撤销N(=9)次投票
 * (O)放大系数
 * (O)Build with Grunt
+* (O)数据导入
+* (O)导出的数据合并
 * 按编号排序
-* 数据导入
-* 导出的数据合并
 
 # 注意事项：
 
