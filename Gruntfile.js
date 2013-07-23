@@ -1,7 +1,7 @@
 /**
- * Grunt file for front end js check and minify.
- * Date      : 2013/02/20
- * copyright : (c) 2013 by QiZhi Tech.
+ * Grunt file for front end resource check/minify/compress.
+ * Date      : 2013/07/23
+ * copyright : (c) 2013 by hustcer.
  */
 module.exports = function(grunt) {
 
@@ -90,7 +90,7 @@ module.exports = function(grunt) {
         compress: {
           main: {
             options: {
-              archive: 'release/voteStatistic.zip'      // make a zipfile
+              archive: 'release/voteStatistic.zip'       // make a zipfile
             },
             files: [
               // {src: ['release/**'], dest: 'release/'},                           // includes files in path and its subdirs

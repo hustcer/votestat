@@ -5,12 +5,19 @@
 */
 jQuery(function($){
 
-    var validCouter = 20, validLimit = 100, totalRole = 211, histLimit = 12;
     var sto         = window.localStorage;
-    var votesItem   = '__preVotes',
+    var validCouter = 20,   // 各区块的最少有效票数
+        validLimit  = 100,  // 总体有效票数
+        totalRole   = 211,  // 总投票候选实体数
+        histLimit   = 12;   // 历史记录数目
+    var votesItem   = '__preVotes',     // 选票统计信息存储对应的key
         votesBkItem = '__preVotes_bk',
-        histItem    = '__votesHist';
-    var fid  = null, lid = null, shiftdown = false;
+        histItem    = '__votesHist';    // 选票统计历史存储对应的key
+
+    var fid       = null,       // 选中的前一个id
+        lid       = null,       // 选中的后一个id
+        shiftdown = false;      // 是否按下 shift key
+
     var msgs = {
         'support'        : '恭喜！您的浏览器可以正确支持该投票统计工具，可放心使用！',
         'noSupport'      : '很遗憾！您的浏览器缺乏一些特性，无法完全支持该统计工具，推荐您使用最新版本的Chrome浏览器！',
@@ -65,12 +72,14 @@ jQuery(function($){
                         fid = lid;
                         lid = $(this).data('id');
                         $(this).toggleClass('selected');
+                        // 按下shift后可以连续多选
                         if(shiftdown){
                             for (var i = fid; i < lid; i++) {
                                 $('table.table td[data-id="' + i + '"]').toggleClass('selected', true);
                             }
                         }
                         var c  = $('td.selected', $elem).length;
+                        // 更新选中记录总数
                         $('td.' + cStr, $elem).text(c);
                         if(c >= validCouter){
                             $('td.' + cStr, $elem).toggleClass('valid', true);
@@ -108,6 +117,9 @@ jQuery(function($){
                 shiftdown = false;
             }, 'keyup');
         },
+        /**
+         * 加载数据刷新结果
+         */
         loadData: function(){
             var prev = sto.getItem(votesItem);
             prev     = JSON.parse(prev);
@@ -118,6 +130,9 @@ jQuery(function($){
             $('div.input-div').fadeIn();
             $('a.import-confirm').show();
         },
+        /**
+         * 数据导入替换
+         */
         importData: function(){
             var v = $.trim($('#data-area').val()), d;
             if(!v){
@@ -140,6 +155,9 @@ jQuery(function($){
             $('div.input-div').fadeIn();
             $('a.merge-confirm').show();
         },
+        /**
+         * 数据合并累加
+         */
         mergeData: function(){
             var v = $.trim($('#data-area').val()), d;
             if(!v){
@@ -181,6 +199,9 @@ jQuery(function($){
                 mo.updateData(prev);
             }
         },
+        /**
+         * 导出数据
+         */
         exportData: function(){
             var prev = sto.getItem(votesItem);
             mo.showMsg(msgs.exportOkay);
@@ -208,6 +229,9 @@ jQuery(function($){
             $('#msgbox').append('<a href="javascript:;" class="revertConfirm warning-btn">确认撤销</a>');
             $('a.revertConfirm').on('click', function(){mo.revertOne();});
         },
+        /**
+         * 撤销一次统计操作
+         */
         revertOne: function(){
             $('a.revertConfirm').off('click');
             var prev = sto.getItem(votesItem),
@@ -244,6 +268,7 @@ jQuery(function($){
                 mo.showMsg(msgs.noRevertData);
                 return;
             }
+            // 更新剩余还可以撤销的统计次数
             $('a.revert').text(msgs.revertLabel + '(' + hist.length + ')');
             mo.showMsg(msgs.revertOkay);
         },
@@ -252,6 +277,9 @@ jQuery(function($){
             $('#msgbox').append('<a href="javascript:;" class="clearallConfirm warning-btn">确认清除</a>');
             $('a.clearallConfirm').on('click', function(){mo.clearAll();});
         },
+        /**
+         * 清除统计结果及历史记录
+         */
         clearAll: function(){
             sto.setItem(votesBkItem, sto.getItem(votesItem));
             sto.removeItem(votesItem);
@@ -260,10 +288,16 @@ jQuery(function($){
             mo.updateData({'totalT':0,'validT':0,'invalidT':0,'totalV':0, 'data':mo.getInitData()});
             mo.showMsg(msgs.clearAll);
         },
+        /**
+         * 显示特定统计信息
+         */
         showMsg: function(msg){
             $('#msgbox').html(msg);
             $('#msgbox').hide().fadeIn();
         },
+        /**
+         * 初始化初始数据
+         */
         getInitData: function(){
             var data = [];
             for (var i = 0; i <= totalRole; i++) {
@@ -271,6 +305,9 @@ jQuery(function($){
             }
             return data;
         },
+        /**
+         * 如果放大倍数为1则直接提交数据，大于1则需要用户确认之后再提交
+         */
         checkBeforeSubmit: function(){
             var ratio = +$('#zoom-ration').val();
             if(ratio === 1){
@@ -297,6 +334,9 @@ jQuery(function($){
             }
             return false;
         },
+        /**
+         * 提交投票，统计投票，更新历史记录，刷新结果等
+         */
         submitVotes: function(){
             var valid = true,
                 msg   = [],
@@ -315,6 +355,7 @@ jQuery(function($){
                 mo.showMsg(msg.join(','));
             }
 
+            // 更新统计结果
             var vc   = valid ? 1*base : 0, ic = valid ? 0 : 1*base;
             var tt   = valid ? dt.length * base : 0;
             if(prev == null){
@@ -340,6 +381,7 @@ jQuery(function($){
                 mo.showMsg(msgs.success + keys.join(','));
             }
 
+            // 更新历史记录
             hist = JSON.parse(hist)||[];
             if(hist.length >= histLimit){
                 hist.shift();
@@ -355,9 +397,13 @@ jQuery(function($){
             sto.setItem(votesItem, JSON.stringify(prev));
             mo.updateData(prev);
             mo.clearCurrent();
+            // 提交完成后将放大倍数改成默认值
             $('#zoom-ration').val('1');
             return false;
         },
+        /**
+         * 刷新投票结果
+         */
         updateData: function(dt){
             var hist  = sto.getItem(histItem);
             if(hist == null){
@@ -392,6 +438,9 @@ jQuery(function($){
             $('div.outcontent').text(out.join(','));
 
         },
+        /**
+         * 构建选中的投票数据
+         */
         buildVoteData: function(){
             var data = [];
             var $selected = $('table.table td.selected');
