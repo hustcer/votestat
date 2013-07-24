@@ -20,6 +20,7 @@ This Is a Votes Statistic Tool
 * (O)数据导入
 * (O)导出的数据合并
 * 按编号排序
+* GA
 
 # 注意事项：
 
