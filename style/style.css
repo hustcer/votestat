@@ -58,4 +58,7 @@ h4{color: #666}
 .submit-data a{float: right;}
 
 .input-div textarea{font-size: 13px;width: 99%;}
+.outcontent table{line-height: 17px;}
+.outcontent th{width: 120px;}
+.outcontent td{width: 120px;}
 

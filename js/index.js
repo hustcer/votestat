@@ -9,6 +9,7 @@ jQuery(function($){
     var validCouter = 20,   // 各区块的最少有效票数
         validLimit  = 100,  // 总体有效票数
         totalRole   = 211,  // 总投票候选实体数
+        rowCount    = 18,   // 每行记录数目
         histLimit   = 12;   // 历史记录数目
     var votesItem   = '__preVotes',     // 选票统计信息存储对应的key
         votesBkItem = '__preVotes_bk',
@@ -16,6 +17,7 @@ jQuery(function($){
 
     var fid       = null,       // 选中的前一个id
         lid       = null,       // 选中的后一个id
+        altdown   = false,      // 是否按下 alt key
         shiftdown = false;      // 是否按下 shift key
 
     var msgs = {
@@ -77,6 +79,10 @@ jQuery(function($){
                             for (var i = fid; i < lid; i++) {
                                 $('table.table td[data-id="' + i + '"]').toggleClass('selected', true);
                             }
+                        }else if(altdown && (fid < lid)){
+                            for (var m = fid; m < lid; m += rowCount) {
+                                $('table.table td[data-id="' + m + '"]').toggleClass('selected', true);
+                            }
                         }
                         var c  = $('td.selected', $elem).length;
                         // 更新选中记录总数
@@ -115,6 +121,14 @@ jQuery(function($){
 
             Mousetrap.bind(['shift' ], function() {
                 shiftdown = false;
+            }, 'keyup');
+
+            Mousetrap.bind(['alt', 'ctrl'], function() {
+                altdown = true;
+            }, 'keypress');
+
+            Mousetrap.bind(['alt', 'ctrl'], function() {
+                altdown = false;
             }, 'keyup');
         },
         /**
@@ -404,8 +418,13 @@ jQuery(function($){
         /**
          * 刷新投票结果
          */
-        updateData: function(dt){
-            var hist  = sto.getItem(histItem);
+        updateData: function(dt, showTable, showAll){
+            showTable  = false;
+            showAll    = false;
+            var sorted = null;
+            var out    = [];
+            var hist   = sto.getItem(histItem);
+
             if(hist == null){
                 $('a.revert').text(msgs.revertLabel + '(0)');
             }else{
@@ -426,17 +445,29 @@ jQuery(function($){
                     nzArr.push(d[i]);
                 }
             }
-            var sorted = nzArr.sort(function(a, b){
-                return b.val - a.val;
-            });
-            var out = [];
+
+            if(showAll){
+                sorted = dt.data;
+            }else{
+                sorted = nzArr.sort(function(a, b){
+                    return b.val - a.val;
+                });
+            }
+
             for (var m = 0, len = sorted.length; m < len; m++) {
-                out.push(sorted[m].key + ':' + sorted[m].val + '票');
+                if(showTable){
+                    out[m] = '<tr><th>' + sorted[m].key + '</th><td>' + sorted[m].val + '</td></tr>';
+                }else{
+                    out[m] = sorted[m].key + ':' + sorted[m].val + '票';
+                }
             }
             $('div.output h5').show();
-            out.push('其它0票.');
-            $('div.outcontent').text(out.join(','));
-
+            if(showTable){
+                $('div.outcontent').html('<table><th>编号</th><td>票数</td>' + out.join('') + '</table>');
+            }else{
+                out.push('其它0票.');
+                $('div.outcontent').html(out.join(','));
+            }
         },
         /**
          * 构建选中的投票数据
