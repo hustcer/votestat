@@ -418,8 +418,13 @@ jQuery(function($){
         /**
          * 刷新投票结果
          */
-        updateData: function(dt, showTable){
-            var hist  = sto.getItem(histItem);
+        updateData: function(dt, showTable, showAll){
+            showTable  = false;
+            showAll    = false;
+            var sorted = null;
+            var out    = [];
+            var hist   = sto.getItem(histItem);
+
             if(hist == null){
                 $('a.revert').text(msgs.revertLabel + '(0)');
             }else{
@@ -440,12 +445,15 @@ jQuery(function($){
                     nzArr.push(d[i]);
                 }
             }
-            var sorted = nzArr.sort(function(a, b){
-                return b.val - a.val;
-            });
 
-            var out   = [];
-            showTable = false;
+            if(showAll){
+                sorted = dt.data;
+            }else{
+                sorted = nzArr.sort(function(a, b){
+                    return b.val - a.val;
+                });
+            }
+
             for (var m = 0, len = sorted.length; m < len; m++) {
                 if(showTable){
                     out[m] = '<tr><th>' + sorted[m].key + '</th><td>' + sorted[m].val + '</td></tr>';
