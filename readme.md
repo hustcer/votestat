@@ -20,8 +20,8 @@ This Is a Votes Statistic Tool
 * (O)Build with Grunt
 * (O)数据导入
 * (O)导出的数据合并
+* (O)GA
 * 按编号排序
-* GA
 * 生成表格数据
 * 显示、隐藏票数为0数据
 * 投票结果图形化显示
