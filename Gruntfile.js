@@ -53,7 +53,7 @@ module.exports = function(grunt) {
                     {
                         expand : true,                                  // Enable dynamic expansion.
                         cwd    : 'js/',                                 // Src matches are relative to this path.
-                        src    : ['jquery.simplemodal.js','index.js'],  // Actual pattern(s) to match.
+                        src    : ['jquery.simplemodal.js','index.js', 'gajs.js'],  // Actual pattern(s) to match.
                         dest   : 'release/js/'                          // Destination path prefix.
                         // ext : '.js'                                  // Dest filepaths will have this extension. '.min.js' is recommeded.
                     }
