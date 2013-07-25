@@ -418,7 +418,7 @@ jQuery(function($){
         /**
          * 刷新投票结果
          */
-        updateData: function(dt){
+        updateData: function(dt, showTable){
             var hist  = sto.getItem(histItem);
             if(hist == null){
                 $('a.revert').text(msgs.revertLabel + '(0)');
@@ -443,14 +443,23 @@ jQuery(function($){
             var sorted = nzArr.sort(function(a, b){
                 return b.val - a.val;
             });
-            var out = [];
+
+            var out   = [];
+            showTable = false;
             for (var m = 0, len = sorted.length; m < len; m++) {
-                out.push(sorted[m].key + ':' + sorted[m].val + '票');
+                if(showTable){
+                    out[m] = '<tr><th>' + sorted[m].key + '</th><td>' + sorted[m].val + '</td></tr>';
+                }else{
+                    out[m] = sorted[m].key + ':' + sorted[m].val + '票';
+                }
             }
             $('div.output h5').show();
-            out.push('其它0票.');
-            $('div.outcontent').text(out.join(','));
-
+            if(showTable){
+                $('div.outcontent').html('<table><th>编号</th><td>票数</td>' + out.join('') + '</table>');
+            }else{
+                out.push('其它0票.');
+                $('div.outcontent').html(out.join(','));
+            }
         },
         /**
          * 构建选中的投票数据
