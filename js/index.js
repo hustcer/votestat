@@ -485,10 +485,9 @@ jQuery(function($){
               var uid = new Date(), storage, result;
               try {
                     (storage = window.localStorage).setItem(uid, uid);
-                    // NOTICE:此处不能使用 "===" 替换 '==' 否则localStorage检测失败
-                    result = storage.getItem(uid) == uid;
+                    result = storage.getItem(uid).toString() === uid.toString();
                     storage.removeItem(uid);
-                    return result && storage;
+                    return !!(result && storage);
               } catch(e) {}
         }())
     };
