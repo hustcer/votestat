@@ -19,6 +19,7 @@ h4{color: #666}
 .table .selected{background-color: #659FE0;}
 .table .selected span{color: #C40000;}
 .table .selected em{color: #333;}
+.table td.empty{width:56px;}
 .counter{margin: 10px 0 20px;}
 .counter table{width: 100%;}
 .counter th{text-align: right;padding-right: 5px;}

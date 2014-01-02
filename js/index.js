@@ -6,9 +6,9 @@
 jQuery(function($){
 
     var sto         = window.localStorage;
-    var validCouter = 20,   // 各区块的最少有效票数
-        validLimit  = 100,  // 总体有效票数
-        totalRole   = 211,  // 总投票候选实体数
+    var validCouter = 10,   // 各区块的最少有效票数
+        validLimit  = 20,  // 总体有效票数
+        totalRole   = 28,  // 总投票候选实体数
         rowCount    = 18,   // 每行记录数目
         histLimit   = 12;   // 历史记录数目
     var votesItem   = '__preVotes',     // 选票统计信息存储对应的key
@@ -29,8 +29,8 @@ jQuery(function($){
         'revertAlert'    : '您确信要撤销前一次的统计数据么？',
         'revertOkay'     : '撤销前一次的统计数据成功!',
         'noRevertData'   : '没有可以撤销的操作!',
-        'aInvalid'       : 'A 区块选票数目不足' + validCouter + '票，该选票无效！',
-        'bInvalid'       : 'B 区块选票数目不足' + validCouter + '票，该选票无效！',
+        'aInvalid'       : 'A 区块选票数目超过' + validCouter + '票，该选票无效！',
+        'bInvalid'       : 'B 区块选票数目超过' + validCouter + '票，该选票无效！',
         'invalid'        : '选票总数目超过' + validLimit + '票，该选票无效！',
         'success'        : '投票成功, 选票分别投给了：',
         'clearAll'       : '所有数据已被清空！',
@@ -87,7 +87,7 @@ jQuery(function($){
                         var c  = $('td.selected', $elem).length;
                         // 更新选中记录总数
                         $('td.' + cStr, $elem).text(c);
-                        if(c >= validCouter){
+                        if(c <= validCouter){
                             $('td.' + cStr, $elem).toggleClass('valid', true);
                         }else{
                             $('td.' + cStr, $elem).toggleClass('valid', false);
@@ -361,8 +361,8 @@ jQuery(function($){
                 al    = $('table.atable td.selected').length,
                 bl    = $('table.btable td.selected').length;
 
-            if(al < validCouter){ msg.push(msgs.aInvalid); }
-            if(bl < validCouter){ msg.push(msgs.bInvalid); }
+            if(al > validCouter){ msg.push(msgs.aInvalid); }
+            if(bl > validCouter){ msg.push(msgs.bInvalid); }
             if(al + bl > validLimit){ msg.push(msgs.invalid); }
             if(msg.length > 0){
                 valid = false;
